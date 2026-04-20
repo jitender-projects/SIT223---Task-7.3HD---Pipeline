@@ -29,8 +29,15 @@ pipeline {
         stage('4. Security') {
             steps {
                 echo 'Running Security Scan on Dependencies...'
-                // Scans all installed packages and their transitive dependencies for known vulnerabilities
                 bat 'dotnet list package --vulnerable --include-transitive'
+            }
+        }
+        stage('5. Deploy') {
+            steps {
+                echo 'Deploying to Test/Staging Environment...'
+                // Packages the application and all dependencies into a clean staging folder
+                bat 'dotnet publish --configuration Release --no-build --output ./staging-environment'
+                echo 'Successfully deployed to staging.'
             }
         }
     }
