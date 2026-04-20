@@ -18,15 +18,19 @@ pipeline {
         stage('3. Code Quality') {
             steps {
                 echo 'Running SonarCloud Analysis...'
-                
-                // Restores the local SonarScanner tool we just added
                 bat 'dotnet tool restore'
-                
                 withCredentials([string(credentialsId: 'sonarcloud-token', variable: 'SONAR_TOKEN')]) {
                     bat 'dotnet sonarscanner begin /k:"jitender-projects_SIT223-7.3HD-Pipeline" /o:"jitender-projects" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.token="%SONAR_TOKEN%"'
                     bat 'dotnet build --no-incremental'
                     bat 'dotnet sonarscanner end /d:sonar.token="%SONAR_TOKEN%"'
                 }
+            }
+        }
+        stage('4. Security') {
+            steps {
+                echo 'Running Security Scan on Dependencies...'
+                // Scans all installed packages and their transitive dependencies for known vulnerabilities
+                bat 'dotnet list package --vulnerable --include-transitive'
             }
         }
     }
