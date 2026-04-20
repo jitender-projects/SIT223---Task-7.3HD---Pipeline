@@ -1,0 +1,36 @@
+C# Method GetMaps:
+Executed DbCommand (43ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT m.id, m.columns, m.createddate, m.description, m.modifieddate, m."Name", m.rows
+FROM map AS mdbug: 23-03-2026 14:53:31.575 RelationalEventId.DataReaderClosing[20301] (Microsoft.EntityFrameworkCore.Database.Command)
+
+
+C# Method InsertMap:
+Executed DbCommand (73ms) [Parameters=[@p0='10', @p1='2026-03-23T14:53:31.6066468+05:30', @p2='A large square arena map', @p3='2026-03-23T14:53:31.6066958+05:30', @p4='Arena' (Nullable = false), @p5='10'], CommandType='Text', CommandTimeout='30']
+INSERT INTO map (columns, createddate, description, modifieddate, "Name", rows)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5)
+RETURNING id;dbug: 23-03-2026 14:53:31.885 CoreEventId.ForeignKeyChangeDetected[10803] (Microsoft.EntityFrameworkCore.ChangeTracking)
+
+
+C# Method UpdateMap:
+Executed DbCommand (21ms) [Parameters=[@p5='1', @p0='15', @p1='An expanded Rectangular Arena', @p2='2026-03-23T15:03:17.5196878+05:30', @p3='Arena-Updated' (Nullable = false), @p4='20'], CommandType='Text', CommandTimeout='30']
+UPDATE map SET columns = @p0, description = @p1, modifieddate = @p2, "Name" = @p3, rows = @p4
+WHERE id = @p5;dbug: 23-03-2026 15:03:17.563 RelationalEventId.DataReaderClosing[20301] (Microsoft.EntityFrameworkCore.Database.Command)
+
+
+C# Method GetRobotCommands:
+Executed DbCommand (8ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT r.id, r.createddate, r.description, r.ismovecommand, r.modifieddate, r."Name"
+FROM robotcommand AS rdbug: 23-03-2026 14:57:33.570 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking)
+
+
+C# Method InsertRobotCommand:
+Executed DbCommand (5ms) [Parameters=[@p0='2026-03-23T14:57:33.6017535+05:30', @p1='Turn the robot right side by 90 degree', @p2='True', @p3='2026-03-23T14:57:33.6018264+05:30', @p4='RIGHT' (Nullable = false)], CommandType='Text', CommandTimeout='30']
+INSERT INTO robotcommand (createddate, description, ismovecommand, modifieddate, "Name")
+VALUES (@p0, @p1, @p2, @p3, @p4)
+RETURNING id;dbug: 23-03-2026 14:57:33.629 CoreEventId.ForeignKeyChangeDetected[10803] (Microsoft.EntityFrameworkCore.ChangeTracking)\
+
+
+C# Method DeleteRobotCommand:
+Executed DbCommand (4ms) [Parameters=[@p0='1'], CommandType='Text', CommandTimeout='30']
+DELETE FROM robotcommand
+WHERE id = @p0;dbug: 23-03-2026 15:05:03.953 RelationalEventId.DataReaderClosing[20301] (Microsoft.EntityFrameworkCore.Database.Command)
