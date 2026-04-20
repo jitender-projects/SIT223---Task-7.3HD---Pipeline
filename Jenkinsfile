@@ -41,13 +41,17 @@ pipeline {
         stage('6. Release') {
             steps {
                 echo 'Promoting to Production Environment...'
-                // 1. Create a production directory if it does not exist
                 bat 'if not exist production-environment mkdir production-environment'
-                
-                // 2. Zip the staging files into a versioned release artifact using the Jenkins Build Number
                 bat 'powershell Compress-Archive -Path ./staging-environment/* -DestinationPath ./production-environment/release-build-%BUILD_NUMBER%.zip -Force'
-                
-                echo 'Release artifact packaged and promoted to production successfully!'
+            }
+        }
+        stage('7. Monitoring & Alerting') {
+            steps {
+                echo 'Sending deployment alert to Datadog...'
+                withCredentials([string(credentialsId: 'datadog-api-key', variable: 'DD_API_KEY')]) {
+                    // Uses curl to send a JSON event directly to your Datadog Event stream
+                    bat 'curl -X POST "https://api.datadoghq.com/api/v1/events" -H "Content-Type: application/json" -H "DD-API-KEY: %DD_API_KEY%" -d "{\\"title\\": \\"Pipeline SIT223-7.3HD Alert\\", \\"text\\": \\"Release Build %BUILD_NUMBER% has been successfully deployed to the production environment and is now being monitored.\\", \\"tags\\": [\\"env:production\\", \\"app:robot-api\\"]}"'
+                }
             }
         }
     }
