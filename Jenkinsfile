@@ -35,9 +35,19 @@ pipeline {
         stage('5. Deploy') {
             steps {
                 echo 'Deploying to Test/Staging Environment...'
-                // Packages the application and all dependencies into a clean staging folder
                 bat 'dotnet publish --configuration Release --no-build --output ./staging-environment'
-                echo 'Successfully deployed to staging.'
+            }
+        }
+        stage('6. Release') {
+            steps {
+                echo 'Promoting to Production Environment...'
+                // 1. Create a production directory if it does not exist
+                bat 'if not exist production-environment mkdir production-environment'
+                
+                // 2. Zip the staging files into a versioned release artifact using the Jenkins Build Number
+                bat 'powershell Compress-Archive -Path ./staging-environment/* -DestinationPath ./production-environment/release-build-%BUILD_NUMBER%.zip -Force'
+                
+                echo 'Release artifact packaged and promoted to production successfully!'
             }
         }
     }
